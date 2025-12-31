@@ -22,7 +22,7 @@ This launches:
 
 > **Note:** Signet is designed for self-hosters on trusted networks (Tailscale, Wireguard, local LAN). There is no login page - access control is handled at the network layer. Public internet deployment with authentication is planned for a future release.
 
-Add keys via CLI or through the web UI:
+Add keys via CLI (optional) or through the web UI (simpler):
 
 ```bash
 docker compose run --rm signet add --name main-key
@@ -44,16 +44,29 @@ Start the daemon:
 cd apps/signet
 pnpm run build
 pnpm run prisma:migrate
+pnpm run signet start
+```
+
+Optionally, you could add keys and start the daemon from the CLI with a specific key directly:
+
+```bash
+cd apps/signet
+pnpm run build
+pnpm run prisma:migrate
+# Add a key via CLI (prompts for passphrase and nsec)
 pnpm run signet add --name main-key
+# Start with a key already unlocked (prompts for passphrase)
 pnpm run signet start --key main-key
 ```
 
-Start the UI dev server:
+Start the UI dev server (in a separate terminal):
 
 ```bash
 cd apps/signet-ui
 pnpm run dev
 ```
+
+Open `http://localhost:4174` to access the dashboard. From there you can add keys, connect apps, and manage signing requests.
 
 ## Configuration
 

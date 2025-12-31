@@ -19,7 +19,7 @@
     "url": "https://github.com/Letdown2491/signet"
   },
   "scripts": {
-    "build": "tsup src/index.ts; tsup src/daemon/index.ts -d dist/daemon; tsup src/client.ts -d dist/client",
+    "build": "prisma generate && tsup src/index.ts; tsup src/daemon/index.ts -d dist/daemon; tsup src/client.ts -d dist/client",
     "build:client": "tsup src/client.ts -d dist/client",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate deploy",
