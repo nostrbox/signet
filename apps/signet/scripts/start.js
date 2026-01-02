@@ -11,9 +11,11 @@ function ensureConfigFolder() {
 
 function runMigrations() {
     console.log('Running database migrations…');
-    const result = spawnSync('npm', ['run', 'prisma:migrate'], {
+    const appDir = path.resolve(__dirname, '..');
+    const prisma = path.join(appDir, 'node_modules', '.bin', 'prisma');
+    const result = spawnSync(prisma, ['migrate', 'deploy'], {
         stdio: 'inherit',
-        shell: true,
+        cwd: appDir,
     });
 
     if (result.status !== 0) {

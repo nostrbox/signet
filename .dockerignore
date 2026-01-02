@@ -49,6 +49,9 @@ coverage/
 # Build caches
 .vite/
 .turbo
+*.tsbuildinfo
+.eslintcache
+.pnpm-debug.log
 
 # Docker (avoid recursion)
 **/Dockerfile

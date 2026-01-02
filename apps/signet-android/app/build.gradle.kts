@@ -14,9 +14,8 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
-// Read version from repo root VERSION file
-val repoRoot = rootProject.projectDir.parentFile.parentFile
-val versionFile = File(repoRoot, "VERSION")
+// Read version from repo root VERSION file (shared with daemon/UI)
+val versionFile = rootProject.file("../VERSION")
 val appVersion = if (versionFile.exists()) {
     versionFile.readText().trim()
 } else {

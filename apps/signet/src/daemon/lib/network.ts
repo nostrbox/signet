@@ -23,6 +23,30 @@ function isVirtualInterface(name: string): boolean {
 }
 
 /**
+ * Check if an IP address is in the Tailscale CGNAT range (100.64.0.0/10)
+ * Tailscale uses 100.64.0.0 - 100.127.255.255
+ */
+function isTailscaleAddress(ip: string): boolean {
+    const parts = ip.split('.');
+    if (parts.length !== 4) return false;
+
+    const firstOctet = parseInt(parts[0], 10);
+    const secondOctet = parseInt(parts[1], 10);
+
+    return firstOctet === 100 && secondOctet >= 64 && secondOctet <= 127;
+}
+
+/**
+ * Get a human-readable label for an IP address
+ */
+function getAddressLabel(ip: string): string {
+    if (isTailscaleAddress(ip)) {
+        return 'Tailscale';
+    }
+    return 'Local';
+}
+
+/**
  * Check if we're running inside a Docker container
  */
 function isRunningInContainer(): boolean {
@@ -44,6 +68,7 @@ function isRunningInContainer(): boolean {
 export interface LocalAddress {
     address: string;
     interface: string;
+    label: string;
 }
 
 /**
@@ -68,6 +93,7 @@ export function getLocalAddresses(): LocalAddress[] {
             addresses.push({
                 address: net.address,
                 interface: name,
+                label: getAddressLabel(net.address),
             });
         }
     }
@@ -95,20 +121,18 @@ export async function printServerInfo(port: number): Promise<void> {
         return;
     }
 
-    // Print all addresses
-    for (const addr of addresses) {
-        console.log(`  → http://${addr.address}:${port}`);
-    }
+    // Print all addresses with labels and QR codes
+    console.log('\nScan to connect from Android:\n');
 
-    // If exactly one address, show QR code for easy mobile setup
-    if (addresses.length === 1) {
-        const url = `http://${addresses[0].address}:${port}`;
+    for (const addr of addresses) {
+        const url = `http://${addr.address}:${port}`;
+        console.log(`  ${url} (${addr.label})`);
+
         try {
             const qr = await QRCode.toString(url, {
                 type: 'terminal',
                 small: true,
             });
-            console.log('\nScan to connect from Android:');
             console.log(qr);
         } catch {
             // QR generation failed, not critical

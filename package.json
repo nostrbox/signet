@@ -11,12 +11,18 @@
   ],
   "scripts": {
     "prepare": "pnpm --filter @signet/types run build",
-    "build": "npm run build --workspace signet",
-    "build:daemon": "npm run build --workspace signet",
-    "build:new-ui": "npm run build --workspace signet-ui",
-    "start:daemon": "npm run lfg --workspace signet",
-    "start:new-ui": "npm run dev --workspace signet-ui -- --host 0.0.0.0 --port 4174",
+    "build": "pnpm --filter signet run build",
+    "build:daemon": "pnpm --filter signet run build",
+    "build:ui": "pnpm --filter signet-ui run build",
+    "start:daemon": "pnpm --filter signet run lfg",
+    "start:ui": "pnpm --filter signet-ui run start",
+    "dev:ui": "pnpm --filter signet-ui run dev",
     "sync-version": "node scripts/sync-version.mjs"
   },
-  "version": "1.1.1"
+  "version": "1.2.0",
+  "pnpm": {
+    "overrides": {
+      "http-proxy": "npm:http-proxy-3@^1.23.2"
+    }
+  }
 }

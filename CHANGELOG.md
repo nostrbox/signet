@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.2.0]
+
+### Security
+- Fixed CVE-2024-21536: Upgraded http-proxy-middleware from 2.0.6 to 3.0.5 (DoS vulnerability)
+- Replaced unmaintained http-proxy with http-proxy-3 via pnpm override
+
+### Added
+- Daemon startup now shows QR code for each network address (Local and Tailscale) instead of only when one address exists
+- Tailscale IPs (100.64.0.0/10 range) are now labeled as "(Tailscale)" in startup output
+- Documentation: Added WireGuard deployment guide to DEPLOYMENT.md
+
+### Changed
+- Build scripts now use pnpm filter syntax instead of npm workspace to eliminates npm config warnings
+- Daemon startup script calls prisma directly instead of via npm to eliminate Node.js deprecation warnings
+- UI production server refactored for http-proxy-middleware v3 API
+
+### Fixed
+- Eliminated all startup warnings in both daemon and UI server
+- Docker: UI Dockerfile now copies full signet-types before install to fix prepare script failure
+- Docker: UI runtime pins express@4 and http-proxy-middleware@3 to fix Express v5 incompatibility
+- Docker: Fixed UI_PORT environment variable not working correctly in docker-compose
+
+---
+
 ## [1.1.1]
 
 ### Added

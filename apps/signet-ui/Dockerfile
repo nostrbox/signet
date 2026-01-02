@@ -3,12 +3,9 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/signet-ui/package.json ./apps/signet-ui/
-COPY packages/signet-types/package.json ./packages/signet-types/
-RUN pnpm install --frozen-lockfile
 COPY packages/signet-types ./packages/signet-types
+RUN pnpm install --frozen-lockfile
 COPY apps/signet-ui ./apps/signet-ui
-WORKDIR /app/packages/signet-types
-RUN pnpm build
 WORKDIR /app/apps/signet-ui
 RUN pnpm build
 
@@ -17,8 +14,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=build /app/apps/signet-ui/dist ./dist
 COPY --from=build /app/apps/signet-ui/server.mjs ./server.mjs
-# Install server dependencies
-RUN npm install express http-proxy-middleware
+# Install server dependencies (pinned to match package.json)
+RUN npm install --no-save express@4 http-proxy-middleware@3
 
 # Environment variables (can be overridden at runtime)
 ENV UI_PORT=4174

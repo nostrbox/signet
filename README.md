@@ -72,6 +72,35 @@ pnpm run dev
 
 Open `http://localhost:4174` to access the dashboard. From there you can add keys, connect apps, and manage signing requests. Note that this is not required if you plan to manage keys and signing approvals via the Android app.
 
+## Production Setup (Without Docker)
+
+Build and run the daemon:
+
+```bash
+cd apps/signet
+pnpm run build
+pnpm run prisma:migrate
+pnpm run lfg
+```
+
+Build and run the UI (in a separate terminal):
+
+```bash
+cd apps/signet-ui
+pnpm run build
+pnpm run start
+```
+
+Or from the monorepo root:
+
+```bash
+pnpm run build:daemon && pnpm run build:ui
+pnpm run start:daemon  # terminal 1
+pnpm run start:ui      # terminal 2
+```
+
+The UI server proxies API requests to the daemon, so you only need to expose port 4174. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for remote access configuration.
+
 ## Configuration
 
 Config is auto-generated on first boot at `~/.signet-config/signet.json`.
